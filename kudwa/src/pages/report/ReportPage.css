@@ -38,6 +38,7 @@
 }
 
 .report-table {
+    width: 100%;
     border-collapse: collapse;
     padding: 0rem;
     box-shadow: 0 0 10px #ddd;
@@ -45,10 +46,11 @@
 
 .report-table th,
 .report-table td {
+    text-align: left;
     border: 1px solid #ddd;
-  padding: 8px 12px;
-  vertical-align: middle;
-  white-space: nowrap;
+    padding: 8px 12px;
+    vertical-align: middle;
+    white-space: nowrap;
 }
 
 .report-table th:first-child,

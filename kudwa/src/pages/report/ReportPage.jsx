@@ -1,6 +1,9 @@
 import React, { useState, useMemo } from "react";
 import reportJson from "../../data/Report/report.json";
 import "./ReportPage.css";
+import useBreadcrumbs from '../../hooks/useBreadcrumbs.jsx';
+import { useEffect } from "react";
+
 
 function parseYearMonth(ym) {
     const [year, month] = ym.split("-").map(Number);
@@ -104,6 +107,23 @@ export default function ReportPage() {
 
     const labels = generateLabels(startingDate, period === "monthly" ? maxDataLength : Math.ceil(maxDataLength / (period === "quarterly" ? 3 : 12)), period);
 
+    const { setBreadcrumbs } = useBreadcrumbs();
+    const [timeframe, setTimeframe] = useState("Monthly");
+
+    useEffect(() => {
+        const newBreadcrumbs = [
+            { label: "Report", path: "/report" },
+            { label: timeframe },
+        ];
+        setBreadcrumbs((prev) => {
+            // Only update if breadcrumbs changed
+            if (JSON.stringify(prev) !== JSON.stringify(newBreadcrumbs)) {
+                return newBreadcrumbs;
+            }
+            return prev;
+        });
+    }, [setBreadcrumbs]);
+
     return (
         <div className="report-page">
             <h1>Financial Report</h1>
@@ -112,7 +132,19 @@ export default function ReportPage() {
                 {["monthly", "quarterly", "yearly"].map((p) => (
                     <button
                         key={p}
-                        onClick={() => setPeriod(p)}
+                        onClick={() => {
+                            setPeriod(p); setTimeframe(p); const newBreadcrumbs = [
+                                { label: "Report", path: "/report" },
+                                { label: timeframe },
+                            ];
+                            setBreadcrumbs((prev) => {
+                                // Only update if breadcrumbs changed
+                                if (JSON.stringify(prev) !== JSON.stringify(newBreadcrumbs)) {
+                                    return newBreadcrumbs;
+                                }
+                                return prev;
+                            });
+                        }}
                         className={period === p ? "active" : ""}
                     >
                         {p.charAt(0).toUpperCase() + p.slice(1)}

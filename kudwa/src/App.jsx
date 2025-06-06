@@ -10,10 +10,7 @@ function App() {
   return (
     <>
       <Routes>
-        {/* Login Page */}
-        <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
-        </Route>
 
         {/* Dashboard + Report share the same layout */}
         <Route element={<MainLayout />}>

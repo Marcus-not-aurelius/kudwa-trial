@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Chart from "react-apexcharts";
 import "./Dashboard.css";
 import monthlyData from "../../data/main-dashboard/monthly.json";
@@ -13,14 +13,8 @@ const Dashboard = () => {
   const [timeframe, setTimeframe] = useState("Monthly");
   const [dashboardData, setDashboardData] = useState(monthlyData);
 
+  // Update dashboard data when timeframe changes
   useEffect(() => {
-    // Update breadcrumbs on timeframe change
-    setBreadcrumbs([
-      { label: "Dashboard", path: "/dashboard" },
-      { label: timeframe },
-    ]);
-
-    // Update dashboard data
     switch (timeframe) {
       case "Monthly":
         setDashboardData(monthlyData);
@@ -36,6 +30,21 @@ const Dashboard = () => {
     }
   }, [timeframe]);
 
+  // Update breadcrumbs when timeframe changes (separate effect)
+  useEffect(() => {
+    const newBreadcrumbs = [
+      { label: "Dashboard", path: "/dashboard" },
+      { label: timeframe },
+    ];
+    setBreadcrumbs((prev) => {
+      // Only update if breadcrumbs changed
+      if (JSON.stringify(prev) !== JSON.stringify(newBreadcrumbs)) {
+        return newBreadcrumbs;
+      }
+      return prev;
+    });
+  }, [timeframe, setBreadcrumbs]);
+
   const labels = dashboardData.mainDashboard.dateArray;
   const { charts } = dashboardData.mainDashboard;
   const { topKPIs, KPIs } = dashboardData.mainDashboardKPIs;
@@ -45,6 +54,8 @@ const Dashboard = () => {
       name: item.name,
       data: item.values,
     }));
+
+  // Memoized chart components with useMemo
 
   const TopKPIs = ({ kpis }) => (
     <div className="kpi-grid">
@@ -57,82 +68,82 @@ const Dashboard = () => {
     </div>
   );
 
-  const DonutChart = ({ title, series }) => (
-    <div className="chart-container">
-      <h2 className="chart-title">{title}</h2>
-      <div className="chart-inner-wrapper">
-        <Chart
-          options={{
-            labels: series.map((s) => s.name),
-            colors: ["#EAE62F", "#B09280", "#698AC5", "#35ea2f", "#b36072", "#b969c5"],
-          }}
-          series={series.map((s) => s.values)}
-          type="donut"
-          width="100%"
-        />
-      </div>
-    </div>
-  );
+  const DonutChart = React.memo(({ title, series }) => {
+    const options = useMemo(() => ({
+      labels: series.map((s) => s.name),
+      colors: ["#EAE62F", "#B09280", "#698AC5", "#35ea2f", "#b36072", "#b969c5"],
+    }), [series]);
 
-  const LineChart = ({ title, series }) => (
-    <div className="chart-container">
-      <h2 className="chart-title">{title}</h2>
-      <div className="chart-inner-wrapper">
-        <Chart
-          options={{
-            xaxis: { categories: labels },
-            colors: ["#EAE62F", "#B09280", "#698AC5", "#35ea2f", "#b36072", "#b969c5"],
-          }}
-          series={series}
-          type="line"
-          height={300}
-        />
-      </div>
-    </div>
-  );
+    const dataSeries = useMemo(() => series.map((s) => s.values), [series]);
 
-  const BarChart = ({ title, series }) => (
-    <div className="chart-container">
-      <div className=" ">
+    return (
+      <div className="chart-container">
         <h2 className="chart-title">{title}</h2>
-        <div className="chart-info">
-          <FaInfo />
+        <div className="chart-inner-wrapper">
+          <Chart options={options} series={dataSeries} type="donut" width="100%" />
         </div>
       </div>
-      <div className="chart-inner-wrapper">
-        <Chart
-          options={{
-            xaxis: { categories: labels },
-            colors: ["#EAE62F", "#B09280", "#698AC5", "#35ea2f", "#b36072", "#b969c5"],
-          }}
-          series={series}
-          type="bar"
-          height={300}
-        />
-      </div>
-    </div>
-  );
+    );
+  });
 
-  const MixedChart = ({ title, stacked, bars, lines }) => (
-    <div className="chart-container">
-      <h2 className="chart-title">{title}</h2>
-      <div className="chart-inner-wrapper">
-        <Chart
-          options={{
-            chart: { stacked },
-            xaxis: { categories: labels },
-            colors: ["#EAE62F", "#B09280", "#698AC5", "#35ea2f", "#b36072", "#b969c5"],
-          }}
-          series={[
-            ...bars.map((b) => ({ ...b, type: "bar" })),
-            ...lines.map((l) => ({ ...l, type: "line" })),
-          ]}
-          type="line"
-          height={350}
-        />
+  const LineChart = React.memo(({ title, series }) => {
+    const options = useMemo(() => ({
+      xaxis: { categories: labels },
+      colors: ["#EAE62F", "#B09280", "#698AC5", "#35ea2f", "#b36072", "#b969c5"],
+    }), [labels]);
+
+    return (
+      <div className="chart-container">
+        <h2 className="chart-title">{title}</h2>
+        <div className="chart-inner-wrapper">
+          <Chart options={options} series={series} type="line" height={300} />
+        </div>
       </div>
-    </div>
-  );
+    );
+  });
+
+  const BarChart = React.memo(({ title, series }) => {
+    const options = useMemo(() => ({
+      xaxis: { categories: labels },
+      colors: ["#EAE62F", "#B09280", "#698AC5", "#35ea2f", "#b36072", "#b969c5"],
+    }), [labels]);
+
+    return (
+      <div className="chart-container">
+        <div className="chart-header">
+          <h2 className="chart-title">{title}</h2>
+          <div className="chart-info">
+            <FaInfo />
+          </div>
+        </div>
+        <div className="chart-inner-wrapper">
+          <Chart options={options} series={series} type="bar" height={300} />
+        </div>
+      </div>
+    );
+  });
+
+  const MixedChart = React.memo(({ title, stacked, bars, lines }) => {
+    const options = useMemo(() => ({
+      chart: { stacked },
+      xaxis: { categories: labels },
+      colors: ["#EAE62F", "#B09280", "#698AC5", "#35ea2f", "#b36072", "#b969c5"],
+    }), [stacked, labels]);
+
+    const series = useMemo(() => [
+      ...bars.map((b) => ({ ...b, type: "bar" })),
+      ...lines.map((l) => ({ ...l, type: "line" })),
+    ], [bars, lines]);
+
+    return (
+      <div className="chart-container">
+        <h2 className="chart-title">{title}</h2>
+        <div className="chart-inner-wrapper">
+          <Chart options={options} series={series} type="line" height={350} />
+        </div>
+      </div>
+    );
+  });
 
   const renderGridSections = () => {
     const allKPIs = [...topKPIs, ...KPIs];
@@ -216,7 +227,7 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <div className="dashboard-header">
         <h1>
-          Now viewing
+          Now viewing{" "}
           <select
             className="dashboard-header-dropdown"
             value={timeframe}
@@ -225,8 +236,8 @@ const Dashboard = () => {
             <option value="Monthly">Monthly</option>
             <option value="Quarterly">Quarterly</option>
             <option value="Yearly">Yearly</option>
-          </select>
-          Data 
+          </select>{" "}
+          Data
         </h1>
       </div>
       {renderGridSections()}

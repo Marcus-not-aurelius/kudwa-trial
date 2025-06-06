@@ -6,11 +6,9 @@ import App from './App.jsx'
 import { BreadcrumbProvider } from './stores/useBreadcrumbContext.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
     <BrowserRouter>
       <BreadcrumbProvider>
         <App />
       </BreadcrumbProvider>
     </BrowserRouter>
-  </StrictMode>,
 )

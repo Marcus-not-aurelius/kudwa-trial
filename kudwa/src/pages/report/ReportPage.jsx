@@ -6,9 +6,9 @@ import { useEffect } from "react";
 
 
 function parseYearMonth(ym) {
-    const [year, month] = ym.split("-").map(Number);
+    const [month, year] = ym.split("-").map(Number); // ← fix order
     return new Date(year, month - 1);
-}
+  }
 
 function aggregateValues(values, period) {
     if (period === "monthly") return values;

@@ -1,0 +1,23 @@
+.main-layout-container {
+  display: flex;
+  max-width: 100vw;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* The rest container takes all remaining space */
+.main-container-navbar {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column; /* so Navbar + content stack vertically */
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* main-content fills space below Navbar */
+.main-content {
+  padding: 2rem;
+  flex-grow: 1;
+  overflow-x: auto; /* allow horizontal scroll if needed */
+  transition: margin-left 0.3s ease;
+}

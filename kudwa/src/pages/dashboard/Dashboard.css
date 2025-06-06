@@ -1,0 +1,184 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.dashboard-header-dropdown {
+    cursor: pointer;
+    margin: 0rem 0.25rem;
+    font-size: 30px;
+    padding-right: 0;
+    font-weight: 700;
+    border: none;
+    color: var(--color-tan);
+    background: none;
+}
+
+.dashboard-header-dropdown:focus {
+    outline: none;
+    border-color: transparent;
+    border: none;
+    /* optional: custom focus border */
+    box-shadow: none;
+    /* optional: subtle ring */
+}
+
+.dashboard-header-dropdown option {
+    color: black;
+    font-size: 17px;
+}
+
+.kpi-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.kpi-card {
+    background: #fff;
+    padding: 1rem;
+    width: 30%;
+    height: 200px;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-tan);
+}
+
+.kpi-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.kpi-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.chart-container {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    min-width: 95%;
+    max-height: 600px;
+    /* 👈 control max height here */
+    height: auto;
+    /* 👈 allow it to fit content */
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-blue);
+}
+
+/* overflow: hidden;
+  height: auto;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; */
+
+.chart-inner-wrapper {
+    overflow: hidden;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.chart-info {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    color: var(--color-blue);
+    cursor: help;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.chart-info:after {
+    content: "Lorem ipsum about the ipsum of lorem";
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: normal;
+    /* ✅ Allow wrapping */
+    max-width: 250px;
+    width: 100px;
+    /* ✅ Prevent overflow */
+    word-wrap: break-word;
+    /* ✅ Break long words */
+    overflow-wrap: break-word;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    visibility: hidden;
+    z-index: 10;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    /* optional polish */
+}
+
+.chart-info:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.chart-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+
+
+.mixed-grid-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 3rem;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+
+
+.kpi-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    width: 50%;
+}
+
+
+.chart-wrapper {
+    width: 50%;
+    display: flex;
+}
+
+.mixed-grid-row.no-kpis .chart-wrapper.full-width {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.mixed-grid-row.with-kpis .chart-wrapper {
+    width: 50%;
+}
+
+.mixed-grid-row.no-kpis {
+    justify-content: center;
+}
